@@ -5,69 +5,129 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: rmakinen <rmakinen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/15 11:16:46 by rmakinen          #+#    #+#             */
-/*   Updated: 2023/05/15 14:14:24 by rmakinen         ###   ########.fr       */
+/*   Created: 2023/05/17 08:21:30 by rmakinen          #+#    #+#             */
+/*   Updated: 2023/05/18 14:11:35 by rmakinen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	is_num(char *arg, int check)
+void	*routine()
 {
-	int	i;
+	printf("whatever is routine\n");
+	return (0);
+}
+
+// int	make_philos(t_data *data)
+// {
+// 	int i;
+
+// 	i = 0;
+// 	data->philosophers = ft_calloc(data->philo_count, sizeof(t_philo));
+// 	if (data->philosophers == NULL)
+// 		return (1);
+// 	while (i < data->philo_count)
+// 	{
+// 		data->philosophers->id = (i + 1);
+// 		data->philosophers->times_eaten = 0;
+// 		data->philosophers->data = data;
+// 		i++;
+// 	}
+// 	return (0);
+// }
+
+// int	make_threads(t_data *data)
+// {
+	// int			i;
+	//pthread_t		temp_thread;
+
+	// i = 1;
+	// printf("count: %i\n", data->philo_count);
+	// printf("i : %i\n", i);
+	//temp_thread = NULL;
+	// while(i <= data->philo_count)
+	// {
+	// 	printf("philo->thread[%i] created\n", i);
+	// 	if (pthread_create(&data->philosophers[i].thread, NULL, &routine, NULL) != 0)
+	// 		return (1);
+	// 	printf("huh?\n");
+		//data->philo[i]->thread = temp_thread;
+	// 	i++;
+	// }
+	// printf("nb of philos %i\n", data->philo_count);
+	// i = 0;
+	// while(i < data->philo_count)
+	// {
+	// 	printf("philo->thread[%i] joined", i);
+	// 	if(pthread_join(data->philo[i]->thread, NULL) != 0)
+	// 	i++;
+	// }
+// 	return (0);
+// }
+
+// int	start_routine(t_data *data)
+// {
+// 	make_philos(data);
+// 	make_threads(data);
+// 	return (0);
+// }
+
+t_philo **init_philos(t_data *data)
+{
+	t_philo **philos;
+	int		i;
 
 	i = 0;
-	if (check != 0)
-		return (check);
-	while (arg[i] != '\0')
+	philos = ft_calloc(data->philo_count, sizeof(t_philo));
+	if (!philos)
+		return (NULL);
+	while (i < data->philo_count)
 	{
-	//	printf("numbers to go through %c\n", arg[i]);
-		if (arg[i] > 47 && arg[i] < 58)
-			i++;
-		else
-			return (1);
+		philos[i] = ft_calloc(1, sizeof(t_philo));
+		philos[i]->data = data;
+		philos[i]->id = i;
+		philos[i]->times_eaten = 0;
+		pthread_create(&philos[i]->thread, NULL, &routine, NULL);
+		i++;
 	}
-	return (0);
+	return (philos);
 }
 
-int	is_negative(char *arg, int check)
+t_data	*init_data(int argc, char **argv)
 {
-	if (check != 0)
-		return (check);
-	printf("neg: %s\n", arg);
-	if (arg[0] == '-' || arg[0] == '+')
-		return (1);
-	return (0);
-}
+	t_data *data;
+	int		i;
 
-int	check_input(char *arg)
-{
-	int	check;
-	check = 0;
-	check = is_negative(arg, check);
-	printf("1: %i\n", check); //PRINTING
-	check = is_num(arg, check);
-	printf("2: %i\n", check); //PRINTING
-	return (check);
+	i = 1;
+	data = ft_calloc(1, sizeof(t_data));
+	if (!data)
+		return (NULL);
+	while (i < argc)
+	{
+		check_input(argv[i]);
+		check_validity(argv[i], i, data);
+		i++;
+	}
+	data->philosophers = init_philos(data);
+	if (!data->philosophers)
+		return (NULL);
+	return (data);
 }
 
 int	main(int argc, char **argv)
 {
-	int	check;
-	int	i;
+	int		i;
+	t_data	*data;
 
-	check = 0;
-	i = 1;
-	if (argc < 5 || argc > 6)
+	data = NULL;
+	if (argc != 5 && argc != 6)
 		exit (1);
-	while (i < argc)
-	{
-		printf("arg %i\n", i);
-		check = check_input(argv[i]);
-		if (check != 0)
-			exit (1);
-		i++;
-	}
-//	make_threads();
+	i = 1;
+	data = init_data(argc, argv);
+	if (!data)
+		return (0);
+	printf("yes?");
+	//start_routine(data);
+	printf("yes?");
 	return (0);
 }
