@@ -34,14 +34,14 @@ int	check_validity(char *arg, int num, t_data *data)
 {
 	int	arg_i;
 
-	printf("num in check: %i\n", num);
+	//printf("num in check: %i\n", num);
 	arg_i = ft_atoi(arg);
 	if (arg_i == -1)
 		exit (1);
-	if (num == 1 && arg_i == 0)
-			exit (1);
+	if (num == 1 && (arg_i < 0 | arg_i > 210))
+		exit (1);
 	if (num == 5 && arg_i == 0)
-			exit (1);
+		exit (1);
 	else
 		init_args(arg_i, num, data);
 	return (0);
@@ -52,11 +52,11 @@ int	check_input(char *arg)
 	int	check;
 	check = 0;
 
-	printf("check check: %i\n", check); //PRINTING
+	//printf("check check: %i\n", check); //PRINTING
 	check = is_negative(arg, check);
-	printf("check neg: %i\n", check); //PRINTING
+	//printf("check neg: %i\n", check); //PRINTING
 	check = is_num(arg, check);
-	printf("check num: %i\n", check); //PRINTING
+	//printf("check num: %i\n", check); //PRINTING
 	if (check != 0)
 		exit (1); //ERROR & EXIT!!
 	return (check);

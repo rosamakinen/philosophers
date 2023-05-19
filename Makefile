@@ -13,10 +13,12 @@
 NAME = philo
 HEADER = -I philo.h
 SRC_DIR = ./
-FILES = philo philo_utils init_args
+FILES = philo philo_utils init_args init
 SRC = $(addprefix $(SRC_DIR),$(addsuffix .c, $(FILES)))
 OBJ = $(addprefix $(SRC_DIR),$(addsuffix .o, $(FILES)))
-FLAGS = -Wall -Wextra -Werror -fsanitize=address -static-libsan -g -pthread
+FLAGS = -Wall -Wextra -Werror -g -pthread
+
+##-fsanitize=address -static-libsan
 
 all: $(NAME)
 
