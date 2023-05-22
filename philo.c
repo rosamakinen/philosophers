@@ -6,22 +6,27 @@
 /*   By: rmakinen <rmakinen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/17 08:21:30 by rmakinen          #+#    #+#             */
-/*   Updated: 2023/05/18 14:11:35 by rmakinen         ###   ########.fr       */
+/*   Updated: 2023/05/22 15:01:42 by rmakinen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	*routine(void *philo)
+int	get_the_time()
 {
-	t_philo *temp;
-	
-	temp = (t_philo *)philo;
-	pthread_mutex_lock(&temp->data->routine);
-	printf("first philo here: %i\n", temp->id);
-	pthread_mutex_unlock(&temp->data->routine);
-	printf("whatever is the routine\n philo id: %i\n", temp->id);
-	return (0);
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	return((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+}
+
+void	philo_wait(t_mcrosec to_sleep)
+{
+	t_mcrosec	time;
+
+	time = get_the_time();
+	while (time + to_sleep > get_the_time())
+		usleep(500);
 }
 
 int	start_routine(t_data *data)
@@ -33,10 +38,12 @@ int	start_routine(t_data *data)
 	while (i < data->philo_count)
 	{
 		printf("created thread for philo id %i\n", i + 1);
-		pthread_create(&data->philo[i].thread, NULL, &routine, &data->philo[i]);
+		if (pthread_create(&data->philo[i].thread, NULL, &routine, &data->philo[i]) != 0)
+			return (1);
 		i++;
 	}
-	data->starting_time = get_time();
+	data->starting_time = get_the_time();
+	printf("THE TIME IS : %lli", data->starting_time);
 	pthread_mutex_unlock(&data->routine);
 	return (0);
 }
@@ -56,6 +63,8 @@ int	main(int argc, char **argv)
 	}
 	printf("yes?\n");
 	start_routine(data);
+	//if (data->stop_simulation != 0)
+	join_and_free(data);
 	printf("yes?\n");
 	return (0);
 }

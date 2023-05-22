@@ -1,3 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rmakinen <rmakinen@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/22 07:53:23 by rmakinen          #+#    #+#             */
+/*   Updated: 2023/05/22 11:16:15 by rmakinen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+
 #include "philo.h"
 
 int	init_mutexes(t_data *data)
@@ -15,6 +28,7 @@ int	init_mutexes(t_data *data)
 	pthread_mutex_init(&data->eating, NULL);
 	pthread_mutex_init(&data->printing, NULL);
 	pthread_mutex_init(&data->routine, NULL);
+	pthread_mutex_init(&data->sleeping, NULL);
 	printf("did that\n");
 	return (0);
 }
@@ -23,6 +37,7 @@ t_philo *init_philos(t_data *data)
 {
 	int		i;
 	t_philo	*temp_philo;
+	t_philo	*temp;
 
 	i = 0;
 	temp_philo = ft_calloc(data->philo_count, sizeof(t_philo));
@@ -37,7 +52,8 @@ t_philo *init_philos(t_data *data)
 		i++;
 	}
 	printf("did that too\n");
-	return (temp_philo);
+	temp = temp_philo;
+	return (temp);
 }
 
 t_data	*init_data(int argc, char **argv)
@@ -57,6 +73,7 @@ t_data	*init_data(int argc, char **argv)
 		i++;
 	}
 	init_mutexes(data);
+	data->stop_simulation = 0;
 	data->philo = init_philos(data);
 	if (!data->philo)
 		return (NULL);

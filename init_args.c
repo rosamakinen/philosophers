@@ -6,7 +6,7 @@
 /*   By: rmakinen <rmakinen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 09:30:10 by rmakinen          #+#    #+#             */
-/*   Updated: 2023/05/18 13:33:43 by rmakinen         ###   ########.fr       */
+/*   Updated: 2023/05/22 14:59:16 by rmakinen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	init_args(int arg_i, int num, t_data *data)
 	if (num == 5) // TIMES TO EAT
 		data->nb_to_eat = arg_i;
 	printf("data->philo_count = %i\n", data->philo_count);
-	printf("data->time_to_die = %i\n", data->time_to_die);
+	printf("data->time_to_die = %lli\n", data->time_to_die);
 	return (0);
 }
 
