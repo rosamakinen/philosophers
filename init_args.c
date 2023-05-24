@@ -6,7 +6,7 @@
 /*   By: rmakinen <rmakinen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 09:30:10 by rmakinen          #+#    #+#             */
-/*   Updated: 2023/05/22 14:59:16 by rmakinen         ###   ########.fr       */
+/*   Updated: 2023/05/24 06:59:47 by rmakinen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int	init_args(int arg_i, int num, t_data *data)
 {
 	printf("arg_i : %i \n", arg_i);
+	data->nb_to_eat = 0;
 	if (num == 1) // NUMBER OF PHILOSOPHERS
 		data->philo_count = arg_i;
 	if (num == 2) // TIME TO DIE
