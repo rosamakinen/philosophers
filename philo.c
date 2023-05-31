@@ -6,7 +6,7 @@
 /*   By: rmakinen <rmakinen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/17 08:21:30 by rmakinen          #+#    #+#             */
-/*   Updated: 2023/05/24 14:47:56 by rmakinen         ###   ########.fr       */
+/*   Updated: 2023/05/31 15:38:04 by rmakinen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,13 @@
 void	print_message(t_philo *philo, char *message)
 {
 	t_mcrosec	current_time;
+	pthread_mutex_lock(&philo->data->checking);
 	if (philo->data->stop_simulation != 0)
+	{
+		pthread_mutex_unlock(&philo->data->checking);
 		return ;
+	}
+	pthread_mutex_unlock(&philo->data->checking);
 	pthread_mutex_lock(&philo->data->printing);
 	current_time = get_the_time();
 	current_time = current_time - philo->data->starting_time;
@@ -34,7 +39,7 @@ void	print_message(t_philo *philo, char *message)
 	pthread_mutex_unlock(&philo->data->printing);
 }
 
-int	get_the_time()
+long long	get_the_time()
 {
 	struct timeval	tv;
 
@@ -84,12 +89,7 @@ int	main(int argc, char **argv)
 		exit (1);
 	}
 	start_routine(data);
-	while (1)
-	{
-		monitoring(data);
-			//break;
-		// if (data->stop_simulation != 0)
-	}
+	monitoring(data);
 	terminate_threads(data);
 	return (0);
 }

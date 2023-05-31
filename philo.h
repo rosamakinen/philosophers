@@ -6,7 +6,7 @@
 /*   By: rmakinen <rmakinen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 12:51:01 by rmakinen          #+#    #+#             */
-/*   Updated: 2023/05/24 14:40:33 by rmakinen         ###   ########.fr       */
+/*   Updated: 2023/05/31 15:46:25 by rmakinen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,16 @@ typedef struct s_data
 	t_mcrosec			time_to_die;
 	t_mcrosec			time_to_eat;
 	t_mcrosec			time_to_sleep;
-	t_mcrosec			time_to_think;
 	t_mcrosec 			starting_time;
 	int					nb_to_eat;
 	int					stop_simulation;
-	int					one_died;
+	int					one_died; // REMOVE??
+	int					all_eaten;
 	pthread_mutex_t		*fork_lock;
-	pthread_mutex_t		eating;
 	pthread_mutex_t		sleeping;
 	pthread_mutex_t		printing;
 	pthread_mutex_t		routine;
+	pthread_mutex_t		checking;
 	pthread_mutex_t		finish;
 	t_philo				*philo;
 }				t_data;
@@ -56,9 +56,11 @@ typedef struct s_philo
 	int					id;
 	int					times_eaten;
 	t_mcrosec			last_meal;
-	int					is_dead;
+	int					is_dead; // REMOVE??
+	int					flag;
 	pthread_mutex_t		*right;
 	pthread_mutex_t		*left;
+	pthread_mutex_t		eating;
 	t_data				*data;
 }				t_philo;
 
@@ -85,17 +87,19 @@ void	destroy_free(t_data *data);
 //routine
 
 void	*routine();
-void	eating(t_philo *philo, t_mcrosec time_to_eat);
+int		eating(t_philo *philo, t_mcrosec time_to_eat);
 void	sleeping(t_philo *philo);
 void	thinking(t_philo *philo);
-void	release_forks(t_philo *philo);
-void	grab_forks(t_philo *philo);
+int		release_forks(t_philo *philo);
+int		grab_forks(t_philo *philo);
 
 //monitoring & printing
-void	philo_wait(t_mcrosec time_to_eat);
-int		get_the_time();
-int		monitoring(t_data *data);
-void	print_message(t_philo *philo, char *message);
-void	terminate_threads(t_data *data);
+void			philo_wait(t_mcrosec time_to_eat);
+long long		get_the_time();
+int				monitoring(t_data *data);
+void			print_message(t_philo *philo, char *message);
+void			terminate_threads(t_data *data);
+int				eaten_enough(t_data *data);
+int				starved(t_data *data);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: rmakinen <rmakinen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 09:28:03 by rmakinen          #+#    #+#             */
-/*   Updated: 2023/05/24 14:36:24 by rmakinen         ###   ########.fr       */
+/*   Updated: 2023/05/31 16:17:11 by rmakinen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,8 @@ void	terminate_threads(t_data *data)
 	static int	i;
 
 	i = 0;
-	//printf("test666\n");
 	while (i < data->philo_count)
 	{
-		//printf("test2\n");
 		pthread_join(data->philo[i].thread, NULL);
 		i++;
 	}
@@ -29,32 +27,82 @@ void	terminate_threads(t_data *data)
 int	monitoring(t_data *data)
 {
 	int	i;
-	long long	starv_check;
-	i = 0;
-	while (i < data->philo_count)
+	int	keep_going;
+
+	keep_going = 1;
+	while (keep_going == 1)
 	{
-		starv_check = get_the_time() - data->philo[i].last_meal;
-		// printf("starv_check = %lli\n", starv_check);
-		// printf("time to die = %lli\n", data->time_to_die);
-		if (data->stop_simulation != 0)
+		i = 0;
+		while (i < data->philo_count)
 		{
-			//printf("going to terminate\n");
-			terminate_threads(data);
-			destroy_free(data);
-		}
-		if (starv_check >= data->time_to_die)
-		{
-			print_message(data->philo, "has died");
-			//printf("stop simu = %i\n", data->stop_simulation);
-			data->stop_simulation = -1;
-			//printf("stop simu = %i\n", data->stop_simulation);
-		}
-		//printf("times eaten: %i for %i\n", data->philo[i].times_eaten, data->philo[i].id);
-		if (data->nb_to_eat > 0)
-			if (data->philo[i].times_eaten >= data->nb_to_eat)
-				data->stop_simulation = -1;
-		usleep(500);
+			if (data->stop_simulation != 0)
+			{
+				terminate_threads(data);
+				destroy_free(data);
+			}
+			if (starved(data))
+			{
+				keep_going = 0;
+			}
+			if (eaten_enough(data))
+			{
+				keep_going = 0;
+			}
 		i++;
+		}
+		usleep(500);
 	}
 	return (0);
 }
+
+int	starved(t_data *data)
+{
+		long long	starv_check;
+		long long	double_check;
+
+		pthread_mutex_lock(&data->finish);
+		double_check = get_the_time();
+		pthread_mutex_lock(&data->checking);
+		starv_check = (get_the_time() - data->philo->last_meal);
+		if (starv_check >= data->time_to_die)
+		{
+			print_message(data->philo, "has died");
+			data->stop_simulation = -1;
+			return (1);
+		}
+		pthread_mutex_unlock(&data->checking);
+		pthread_mutex_unlock(&data->finish);
+
+	return (0);
+}
+
+int	eaten_enough(t_data *data)
+{
+
+	if (data->nb_to_eat > 0)
+	{
+		pthread_mutex_lock(&data->philo->eating);
+		if (data->philo->times_eaten >= data->nb_to_eat)
+		{
+			//printf("all eaten count: %i\n", data->all_eaten);
+			if (data->philo->flag == 0)
+			{
+				data->all_eaten++;
+				printf("***all eaten count: %i***\n", data->all_eaten);
+				data->philo->flag = 1;
+			}
+		}
+		if (data->all_eaten >= data->nb_to_eat)
+		{
+
+			//printf("all_eaten = %d, nb_to_eat = %d\n", data->all_eaten, data->nb_to_eat);
+			pthread_mutex_lock(&data->checking);
+			data->stop_simulation = -1;
+			pthread_mutex_unlock(&data->checking);
+			return (1);
+		}
+		pthread_mutex_unlock(&data->philo->eating);
+	}
+	return (0);
+}
+

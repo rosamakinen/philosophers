@@ -6,7 +6,7 @@
 #    By: rmakinen <rmakinen@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/15 12:50:38 by rmakinen          #+#    #+#              #
-#    Updated: 2023/05/23 10:20:28 by rmakinen         ###   ########.fr        #
+#    Updated: 2023/05/31 15:37:09 by rmakinen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,9 +16,9 @@ SRC_DIR = ./
 FILES = philo philo_utils init_args init error routine monitoring
 SRC = $(addprefix $(SRC_DIR),$(addsuffix .c, $(FILES)))
 OBJ = $(addprefix $(SRC_DIR),$(addsuffix .o, $(FILES)))
-FLAGS = -Wall -Wextra -Werror -g -pthread
+FLAGS = -Wall -Wextra -Werror -o2 -g -pthread -fsanitize=thread
 
-##-fsanitize=address -static-libsan
+##-static-libsan
 
 all: $(NAME)
 
