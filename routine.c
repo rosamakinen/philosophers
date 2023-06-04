@@ -6,7 +6,7 @@
 /*   By: rmakinen <rmakinen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 14:07:57 by rmakinen          #+#    #+#             */
-/*   Updated: 2023/06/03 16:46:47 by rmakinen         ###   ########.fr       */
+/*   Updated: 2023/06/04 14:45:43 by rmakinen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,8 @@ void	*routine(void *philo)
 	pthread_mutex_unlock(&temp->data->routine);
 	if (temp->id % 2 != 0)
 	{
-		philo_wait(temp->data->time_to_eat);
+		//philo_wait(temp->data->time_to_eat); // waiting for less time, to not offset everything so much
+		usleep(50);
 	}
 	if (eating(temp, temp->data->time_to_eat) == 0)
 	{
