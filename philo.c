@@ -6,37 +6,33 @@
 /*   By: rmakinen <rmakinen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/17 08:21:30 by rmakinen          #+#    #+#             */
-/*   Updated: 2023/05/31 15:38:04 by rmakinen         ###   ########.fr       */
+/*   Updated: 2023/06/03 16:49:40 by rmakinen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	print_message(t_philo *philo, char *message)
+int	print_message(t_philo *philo, char *message)
 {
 	t_mcrosec	current_time;
-	pthread_mutex_lock(&philo->data->checking);
-	if (philo->data->stop_simulation != 0)
-	{
-		pthread_mutex_unlock(&philo->data->checking);
-		return ;
-	}
-	pthread_mutex_unlock(&philo->data->checking);
+
 	pthread_mutex_lock(&philo->data->printing);
 	current_time = get_the_time();
 	current_time = current_time - philo->data->starting_time;
 	if (strcmp(message, "has died") == 0)
-		printf(RED"%llu, id %i, %s\n", current_time, philo->id, message);
+		printf(RED"%llu %i %s\n", current_time, philo->id, message);
+	if (philo->data->exit_flag == 1)
+		return (1);
 	if (strcmp(message, "has taken fork") == 0)
-		printf(CYAN"%llu, id %i, %s\n", current_time, philo->id, message);
+		printf(CYAN"%llu %i %s\n", current_time, philo->id, message);
 	if (strcmp(message, "gave up fork") == 0 || strcmp(message, "took left fork") == 0)
-		printf(CYAN"%llu, id %i, %s\n", current_time, philo->id, message);
+		printf(CYAN"%llu %i %s\n", current_time, philo->id, message);
 	if (strcmp(message, "is eating") == 0)
-		printf(GREEN"%llu, id %i, %s\n", current_time, philo->id, message);
+		printf(GREEN"%llu %i %s\n", current_time, philo->id, message);
 	if (strcmp(message, "is sleeping") == 0 || strcmp(message, "is thinking") == 0)
-		printf(PURPLE"%llu, id %i, %s\n", current_time, philo->id, message);
-	//printf("left no: %i, right no: %i\n", philo->id - 1, philo->id);
+		printf(PURPLE"%llu %i %s\n", current_time, philo->id, message);
 	pthread_mutex_unlock(&philo->data->printing);
+	return (0);
 }
 
 long long	get_the_time()
@@ -89,7 +85,11 @@ int	main(int argc, char **argv)
 		exit (1);
 	}
 	start_routine(data);
+	printf("outof start\n");
 	monitoring(data);
-	terminate_threads(data);
+	printf("outof start\n");
+	//terminate_threads(data);
+	printf("going from main\n");
+	destroy_free(data);
 	return (0);
 }

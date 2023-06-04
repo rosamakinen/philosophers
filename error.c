@@ -6,7 +6,7 @@
 /*   By: rmakinen <rmakinen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 09:36:40 by rmakinen          #+#    #+#             */
-/*   Updated: 2023/05/26 10:40:48 by rmakinen         ###   ########.fr       */
+/*   Updated: 2023/06/03 16:42:41 by rmakinen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,13 @@ void	destroy_free(t_data *data)
 
 	i = 0;
 	printf("in destroy free\n");
+	while (i < data->philo_count)
+	{
+		printf("terminating threads\n");
+		pthread_join(data->philo[i].thread, NULL);
+		i++;
+	}
+	i = 0;
 	//printf("times eaten: %i for %i\n", data->philo->times_eaten, data->philo->id);
 	while (i < data->philo_count)
 	{

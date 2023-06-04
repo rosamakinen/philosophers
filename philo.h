@@ -6,7 +6,7 @@
 /*   By: rmakinen <rmakinen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 12:51:01 by rmakinen          #+#    #+#             */
-/*   Updated: 2023/05/31 15:46:25 by rmakinen         ###   ########.fr       */
+/*   Updated: 2023/06/03 14:55:45 by rmakinen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ typedef struct s_data
 	t_mcrosec 			starting_time;
 	int					nb_to_eat;
 	int					stop_simulation;
-	int					one_died; // REMOVE??
+	int					exit_flag; // REMOVE??
 	int					all_eaten;
 	pthread_mutex_t		*fork_lock;
 	pthread_mutex_t		sleeping;
@@ -86,20 +86,21 @@ void	destroy_free(t_data *data);
 
 //routine
 
-void	*routine();
+void	*routine(void *philo);
 int		eating(t_philo *philo, t_mcrosec time_to_eat);
-void	sleeping(t_philo *philo);
-void	thinking(t_philo *philo);
-int		release_forks(t_philo *philo);
-int		grab_forks(t_philo *philo);
+int		sleeping(t_philo *philo);
+//int		release_forks(t_philo *philo);
+//int		grab_forks(t_philo *philo);
 
 //monitoring & printing
 void			philo_wait(t_mcrosec time_to_eat);
 long long		get_the_time();
 int				monitoring(t_data *data);
-void			print_message(t_philo *philo, char *message);
+int				print_message(t_philo *philo, char *message);
 void			terminate_threads(t_data *data);
-int				eaten_enough(t_data *data);
-int				starved(t_data *data);
+//int				eaten_enough(t_data *data);
+//int				starved(t_data *data);
+int				check_if_dead(t_philo *philo);
+int				check_flag(t_data *data, int flag);
 
 #endif

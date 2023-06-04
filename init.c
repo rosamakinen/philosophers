@@ -6,7 +6,7 @@
 /*   By: rmakinen <rmakinen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 07:53:23 by rmakinen          #+#    #+#             */
-/*   Updated: 2023/05/31 14:22:22 by rmakinen         ###   ########.fr       */
+/*   Updated: 2023/06/03 11:36:07 by rmakinen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ t_data	*init_data(int argc, char **argv)
 	}
 	init_mutexes(data);
 	data->stop_simulation = 0;
-	data->one_died = 0;
+	data->exit_flag = 0;
 	data->all_eaten = 0;
 	data->philo = init_philos(data);
 	if (!data->philo)
