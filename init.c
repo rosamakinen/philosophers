@@ -6,10 +6,9 @@
 /*   By: rmakinen <rmakinen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 07:53:23 by rmakinen          #+#    #+#             */
-/*   Updated: 2023/06/06 07:46:48 by rmakinen         ###   ########.fr       */
+/*   Updated: 2023/06/06 18:21:49 by rmakinen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "philo.h"
 
@@ -33,12 +32,11 @@ int	init_mutexes(t_data *data)
 	return (0);
 }
 
-t_philo *init_philos(t_data *data)
+t_philo	*init_philos(t_data *data)
 {
 	int		i;
 	int		t;
 	t_philo	*temp_philo;
-	t_philo	*temp;
 
 	i = 0;
 	t = data->philo_count;
@@ -49,23 +47,22 @@ t_philo *init_philos(t_data *data)
 	{
 		pthread_mutex_init(&temp_philo[i].eating, NULL);
 		temp_philo[i].data = data;
-		temp_philo[i].id = i;
+		temp_philo[i].id = i + 1;
 		temp_philo[i].times_eaten = 0;
 		temp_philo[i].flag = 0;
 		if (i == 0)
-			temp_philo[i].left = &temp_philo->data->fork_lock[t-1];
+			temp_philo[i].left = &temp_philo->data->fork_lock[t - 1];
 		else
-			temp_philo[i].left = &temp_philo->data->fork_lock[i-1];
+			temp_philo[i].left = &temp_philo->data->fork_lock[i - 1];
 		temp_philo[i].right = &temp_philo->data->fork_lock[i];
 		i++;
 	}
-	temp = temp_philo;
-	return (temp);
+	return (temp_philo);
 }
 
 t_data	*init_data(int argc, char **argv)
 {
-	t_data *data;
+	t_data	*data;
 	int		i;
 
 	i = 1;
@@ -82,9 +79,11 @@ t_data	*init_data(int argc, char **argv)
 	data->stop_simulation = 0;
 	data->exit_flag = 0;
 	data->all_eaten = 0;
+	data->buffer = 0;
+	if (data->philo_count > 100)
+		data->buffer = 2;
 	data->philo = init_philos(data);
 	if (!data->philo)
 		return (NULL);
 	return (data);
 }
-

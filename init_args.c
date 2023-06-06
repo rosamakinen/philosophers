@@ -6,7 +6,7 @@
 /*   By: rmakinen <rmakinen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 09:30:10 by rmakinen          #+#    #+#             */
-/*   Updated: 2023/06/06 08:00:53 by rmakinen         ###   ########.fr       */
+/*   Updated: 2023/06/06 14:53:56 by rmakinen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ int	check_validity(char *arg, int num, t_data *data)
 int	check_input(char *arg)
 {
 	int	check;
-	check = 0;
 
+	check = 0;
 	check = is_negative(arg, check);
 	check = is_num(arg, check);
 	if (check != 0)

@@ -6,7 +6,7 @@
 /*   By: rmakinen <rmakinen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/17 08:21:30 by rmakinen          #+#    #+#             */
-/*   Updated: 2023/06/06 07:48:36 by rmakinen         ###   ########.fr       */
+/*   Updated: 2023/06/06 15:32:59 by rmakinen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,15 @@ long long	get_the_time()
 	return((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
-void	philo_wait(t_mcrosec to_sleep)
+void	philo_wait(t_data *data, t_mcrosec to_sleep)
 {
 	t_mcrosec	time;
 
 	time = get_the_time();
-	while (time + to_sleep > get_the_time())
+	while (time + to_sleep > get_the_time() && (check_flag(data, 0) == 0))
+	{
 		usleep(500);
+	}
 }
 
 int	start_routine(t_data *data)
@@ -80,8 +82,6 @@ int	main(int argc, char **argv)
 	}
 	start_routine(data);
 	monitoring(data);
-	printf("going from main\n");
 	destroy_free(data);
-	printf("coming from main\n");
 	return (0);
 }

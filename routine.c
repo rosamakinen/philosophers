@@ -6,7 +6,7 @@
 /*   By: rmakinen <rmakinen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 14:07:57 by rmakinen          #+#    #+#             */
-/*   Updated: 2023/06/06 06:38:02 by rmakinen         ###   ########.fr       */
+/*   Updated: 2023/06/06 18:38:51 by rmakinen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	eating(t_philo *philo, t_mcrosec time_to_eat)
 	philo->last_meal = get_the_time();
 	pthread_mutex_unlock(&philo->eating);
 	print_message(philo, "is eating");
-	philo_wait(time_to_eat);
+	philo_wait(philo->data, time_to_eat);
 	pthread_mutex_unlock(philo->right);
 	pthread_mutex_unlock(philo->left);
 	if (sleeping(philo))
@@ -51,22 +51,19 @@ int	eating_alone(t_philo *philo)
 {
 	print_message(philo, "is thinking");
 	pthread_mutex_lock(philo->right);
-	philo_wait(philo->data->time_to_die);
+	print_message(philo, "has taken fork");
+	philo_wait(philo->data, philo->data->time_to_die);
 	return (0);
 }
 
 int	sleeping(t_philo *philo)
 {
 	if (check_flag(philo->data, 0))
-	{
 		return (1);
-	}
 	print_message(philo, "is sleeping");
-	philo_wait(philo->data->time_to_sleep);
+	philo_wait(philo->data, philo->data->time_to_sleep);
 	if (eating(philo, philo->data->time_to_eat))
-	{
 		return (1);
-	}
 	return (0);
 }
 
@@ -81,8 +78,7 @@ void	*routine(void *philo)
 	pthread_mutex_unlock(&temp->data->routine);
 	if (temp->id % 2 != 0)
 	{
-		//philo_wait(temp->data->time_to_eat); // waiting for less time, to not offset everything so much
-		philo_wait(1);
+		philo_wait(temp->data, 10);
 	}
 	if (eating(temp, temp->data->time_to_eat) == 0)
 	{

@@ -6,7 +6,7 @@
 /*   By: rmakinen <rmakinen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 12:51:01 by rmakinen          #+#    #+#             */
-/*   Updated: 2023/06/06 07:32:40 by rmakinen         ###   ########.fr       */
+/*   Updated: 2023/06/06 15:35:45 by rmakinen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ typedef struct s_data
 	int					nb_to_eat;
 	int					stop_simulation;
 	int					exit_flag; // REMOVE??
+	int					buffer;
 	int					all_eaten;
 	pthread_mutex_t		*fork_lock;
 	pthread_mutex_t		printing;
@@ -86,11 +87,12 @@ int		eating_alone(t_philo *philo);
 int		take_forks(t_philo *philo);
 
 //monitoring & printing
-void			philo_wait(t_mcrosec time_to_eat);
+void			philo_wait(t_data *data, t_mcrosec time_to_eat);
 long long		get_the_time();
 int				monitoring(t_data *data);
 int				print_message(t_philo *philo, char *message);
 int				check_if_dead(t_philo *philo);
 int				check_flag(t_data *data, int flag);
+int				check_last_meal(t_philo *philo);
 
 #endif
