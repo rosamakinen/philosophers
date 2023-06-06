@@ -6,7 +6,7 @@
 /*   By: rmakinen <rmakinen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/17 08:21:30 by rmakinen          #+#    #+#             */
-/*   Updated: 2023/06/04 15:20:45 by rmakinen         ###   ########.fr       */
+/*   Updated: 2023/06/06 07:48:36 by rmakinen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,19 @@
 
 int	print_message(t_philo *philo, char *message)
 {
-	t_mcrosec	current_time;
+	t_mcrosec	event_time;
 
-	current_time = get_the_time();
-	current_time = current_time - philo->data->starting_time; // counting time in the function itself
-	pthread_mutex_lock(&philo->data->printing);
-	if (strcmp(message, "has died") == 0)
-		printf(RED"%llu %i %s\n", current_time, philo->id, message);
-	if (philo->data->exit_flag == 1)
+	if (check_flag(philo->data, 0))
 		return (1);
-	if (strcmp(message, "has taken fork") == 0)
-		printf(CYAN"%llu %i %s\n", current_time, philo->id, message);
-	if (strcmp(message, "gave up fork") == 0)
-		printf(CYAN"%llu %i %s\n", current_time, philo->id, message);
-	if (strcmp(message, "is eating") == 0)
-		printf(GREEN"%llu %i %s\n", current_time, philo->id, message);
-	if (strcmp(message, "is sleeping") == 0 || strcmp(message, "is thinking") == 0)
-		printf(PURPLE"%llu %i %s\n", current_time, philo->id, message);
-	pthread_mutex_unlock(&philo->data->printing);
+	event_time = get_the_time() - philo->data->starting_time;
+	pthread_mutex_lock(&philo->data->checking);
+	if (philo->data->exit_flag == 1)
+	{
+		pthread_mutex_unlock(&philo->data->checking);
+		return (1);
+	}
+	printf("%llu %i %s\n", event_time, philo->id, message);
+	pthread_mutex_unlock(&philo->data->checking);
 	return (0);
 }
 
@@ -49,7 +44,7 @@ void	philo_wait(t_mcrosec to_sleep)
 
 	time = get_the_time();
 	while (time + to_sleep > get_the_time())
-		usleep(100);
+		usleep(500);
 }
 
 int	start_routine(t_data *data)
@@ -60,7 +55,6 @@ int	start_routine(t_data *data)
 	pthread_mutex_lock(&data->routine);
 	while (i < data->philo_count)
 	{
-		printf("created thread for philo id %i\n", i);
 		if (pthread_create(&data->philo[i].thread, NULL, &routine, &data->philo[i]) != 0)
 			return (1);
 		data->philo[i].last_meal = get_the_time();
@@ -85,11 +79,9 @@ int	main(int argc, char **argv)
 		exit (1);
 	}
 	start_routine(data);
-	printf("outof start\n");
 	monitoring(data);
-	printf("outof start\n");
-	//terminate_threads(data);
 	printf("going from main\n");
 	destroy_free(data);
+	printf("coming from main\n");
 	return (0);
 }

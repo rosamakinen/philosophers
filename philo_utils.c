@@ -6,7 +6,7 @@
 /*   By: rmakinen <rmakinen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 13:24:08 by rmakinen          #+#    #+#             */
-/*   Updated: 2023/05/18 14:11:38 by rmakinen         ###   ########.fr       */
+/*   Updated: 2023/06/06 07:32:18 by rmakinen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,18 +41,6 @@ int	ft_atoi(const char *str)
 	return ((int)result * (int)symbol);
 }
 
-int	ft_strlen(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] != '\0')
-	{
-		printf("okay\n");
-		i++;
-	}
-	return (i);
-}
 int	is_num(char *arg, int check)
 {
 	int	i;
@@ -60,7 +48,6 @@ int	is_num(char *arg, int check)
 	i = 0;
 	if (check != 0)
 		return (check);
-	printf("the num: %c", arg[i]);
 	while (arg[i] != '\0')
 	{
 		if (arg[i] > 47 && arg[i] < 58)

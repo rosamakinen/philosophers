@@ -6,7 +6,7 @@
 /*   By: rmakinen <rmakinen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 12:51:01 by rmakinen          #+#    #+#             */
-/*   Updated: 2023/06/03 14:55:45 by rmakinen         ###   ########.fr       */
+/*   Updated: 2023/06/06 07:32:40 by rmakinen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,6 @@
 #include <pthread.h>
 #include <string.h> //!!!!!!
 #include <sys/time.h>
-
-# define NC		"\e[0m"
-# define RED	"\e[31m"
-# define GREEN	"\e[32m"
-# define PURPLE	"\e[35m"
-# define CYAN	"\e[36m"
 
 typedef long long t_mcrosec;
 
@@ -42,7 +36,6 @@ typedef struct s_data
 	int					exit_flag; // REMOVE??
 	int					all_eaten;
 	pthread_mutex_t		*fork_lock;
-	pthread_mutex_t		sleeping;
 	pthread_mutex_t		printing;
 	pthread_mutex_t		routine;
 	pthread_mutex_t		checking;
@@ -56,7 +49,6 @@ typedef struct s_philo
 	int					id;
 	int					times_eaten;
 	t_mcrosec			last_meal;
-	int					is_dead; // REMOVE??
 	int					flag;
 	pthread_mutex_t		*right;
 	pthread_mutex_t		*left;
@@ -77,6 +69,7 @@ int		init_args(int arg_i, int num, t_data *data);
 int		init_mutexes(t_data *data);
 t_data	*init_data(int argc, char **argv);
 t_philo *init_philos(t_data *data);
+t_philo	*assign_forks(t_philo *temp_philo);
 
 //utils
 int		ft_atoi(const char *str);
@@ -89,17 +82,14 @@ void	destroy_free(t_data *data);
 void	*routine(void *philo);
 int		eating(t_philo *philo, t_mcrosec time_to_eat);
 int		sleeping(t_philo *philo);
-//int		release_forks(t_philo *philo);
-//int		grab_forks(t_philo *philo);
+int		eating_alone(t_philo *philo);
+int		take_forks(t_philo *philo);
 
 //monitoring & printing
 void			philo_wait(t_mcrosec time_to_eat);
 long long		get_the_time();
 int				monitoring(t_data *data);
 int				print_message(t_philo *philo, char *message);
-void			terminate_threads(t_data *data);
-//int				eaten_enough(t_data *data);
-//int				starved(t_data *data);
 int				check_if_dead(t_philo *philo);
 int				check_flag(t_data *data, int flag);
 

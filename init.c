@@ -6,7 +6,7 @@
 /*   By: rmakinen <rmakinen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 07:53:23 by rmakinen          #+#    #+#             */
-/*   Updated: 2023/06/03 11:36:07 by rmakinen         ###   ########.fr       */
+/*   Updated: 2023/06/06 07:46:48 by rmakinen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,21 @@
 
 int	init_mutexes(t_data *data)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	data->fork_lock = malloc(sizeof(pthread_mutex_t) * data->philo_count);
-		//check_malloc
-	while(i < data->philo_count)
+	if (!data->fork_lock)
+		return (1);
+	while (i < data->philo_count)
 	{
 		pthread_mutex_init(&data->fork_lock[i], NULL);
 		i++;
 	}
-	printf("initializing mutexes\n");
 	pthread_mutex_init(&data->printing, NULL);
 	pthread_mutex_init(&data->routine, NULL);
-	pthread_mutex_init(&data->sleeping, NULL);
 	pthread_mutex_init(&data->finish, NULL);
 	pthread_mutex_init(&data->checking, NULL);
-	printf("did that\n");
 	return (0);
 }
 
@@ -53,10 +51,9 @@ t_philo *init_philos(t_data *data)
 		temp_philo[i].data = data;
 		temp_philo[i].id = i;
 		temp_philo[i].times_eaten = 0;
-		temp_philo[i].is_dead = 0;
 		temp_philo[i].flag = 0;
 		if (i == 0)
-			temp_philo[i].left = &temp_philo->data->fork_lock[t];
+			temp_philo[i].left = &temp_philo->data->fork_lock[t-1];
 		else
 			temp_philo[i].left = &temp_philo->data->fork_lock[i-1];
 		temp_philo[i].right = &temp_philo->data->fork_lock[i];

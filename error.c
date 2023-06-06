@@ -6,7 +6,7 @@
 /*   By: rmakinen <rmakinen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 09:36:40 by rmakinen          #+#    #+#             */
-/*   Updated: 2023/06/04 15:20:46 by rmakinen         ###   ########.fr       */
+/*   Updated: 2023/06/06 07:47:52 by rmakinen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,12 @@ void	destroy_free(t_data *data)
 	int	i;
 
 	i = 0;
-	printf("in destroy free\n");
-	printf("thread going to join: %i\n", data->philo->id);
-	while (data->philo[i].thread && i < data->philo_count)
+	printf("in destroy_free");
+	while (i < data->philo_count)
 	{
-		printf("terminating threads\n");
-		pthread_join(data->philo[i].thread, NULL);
+		printf("joining %i", data->philo->id);
+		if (pthread_join(data->philo[i].thread, NULL))
+			break ;
 		i++;
 	}
 	i = 0;
@@ -36,6 +36,6 @@ void	destroy_free(t_data *data)
 	free(data->fork_lock);
 	pthread_mutex_destroy(&data->routine);
 	pthread_mutex_destroy(&data->printing);
-	pthread_mutex_destroy(&data->sleeping);
 	exit (0);
-}
+	}
+
