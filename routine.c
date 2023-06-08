@@ -6,7 +6,7 @@
 /*   By: rmakinen <rmakinen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 14:07:57 by rmakinen          #+#    #+#             */
-/*   Updated: 2023/06/08 08:01:32 by rmakinen         ###   ########.fr       */
+/*   Updated: 2023/06/08 14:23:42 by rmakinen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 int	eating(t_philo *philo, long long time_to_eat)
 {
-	if (check_flag(philo->data, 0))
-		return (1);
 	if (philo->data->philo_count == 1)
 	{
 		eating_alone(philo);
 		return (0);
 	}
+	if (check_flag(philo->data, 0))
+		return (1);
 	take_forks(philo);
 	pthread_mutex_lock(&philo->eating);
 	philo->times_eaten++;
@@ -37,6 +37,8 @@ int	eating(t_philo *philo, long long time_to_eat)
 
 int	take_forks(t_philo *philo)
 {
+	if (check_flag(philo->data, 0))
+		return (1);
 	pthread_mutex_lock(philo->left);
 	print_message(philo, "has taken fork");
 	pthread_mutex_lock(philo->right);
