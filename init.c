@@ -6,7 +6,7 @@
 /*   By: rmakinen <rmakinen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 07:53:23 by rmakinen          #+#    #+#             */
-/*   Updated: 2023/06/08 08:33:48 by rmakinen         ###   ########.fr       */
+/*   Updated: 2023/06/08 08:50:57 by rmakinen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,8 @@ t_data	*init_data(int argc, char **argv)
 	data->exit_flag = 0;
 	data->all_eaten = 0;
 	data->buffer = 0;
-	if (data->philo_count >= 10 && data->time_to_die < 200)
+	if ((data->philo_count >= 10 && data->time_to_die < 200) \
+	|| data->time_to_die < data->time_to_eat)
 		data->buffer = 2;
 	data->philo = init_philos(data);
 	if (!data->philo)
