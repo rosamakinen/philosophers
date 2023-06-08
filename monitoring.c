@@ -6,7 +6,7 @@
 /*   By: rmakinen <rmakinen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 09:28:03 by rmakinen          #+#    #+#             */
-/*   Updated: 2023/06/06 15:39:29 by rmakinen         ###   ########.fr       */
+/*   Updated: 2023/06/08 07:57:53 by rmakinen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	check_flag(t_data *data, int flag)
 
 int	check_if_dead(t_philo *philo)
 {
-	t_mcrosec	time;
+	long long	time;
 
 	time = (get_the_time() - philo->data->time_to_die);
 	if (philo->data->nb_to_eat > 0)
@@ -70,7 +70,7 @@ int	check_last_meal(t_philo *philo)
 int	monitoring(t_data *data)
 {
 	int	keep_going;
-	int i;
+	int	i;
 
 	keep_going = 1;
 	while (keep_going)
@@ -84,10 +84,10 @@ int	monitoring(t_data *data)
 			}
 			i++;
 		}
-		if (data->philo_count > 60)
-			philo_wait(data, 2);
+		if (data->philo_count > 150)
+			philo_wait(data, 1);
 		else
-			usleep(500);
+			usleep(250);
 	}
 	return (0);
 }

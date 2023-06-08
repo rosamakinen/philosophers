@@ -6,7 +6,7 @@
 /*   By: rmakinen <rmakinen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/17 08:21:30 by rmakinen          #+#    #+#             */
-/*   Updated: 2023/06/06 15:32:59 by rmakinen         ###   ########.fr       */
+/*   Updated: 2023/06/08 08:26:48 by rmakinen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	print_message(t_philo *philo, char *message)
 {
-	t_mcrosec	event_time;
+	long long	event_time;
 
 	if (check_flag(philo->data, 0))
 		return (1);
@@ -30,34 +30,35 @@ int	print_message(t_philo *philo, char *message)
 	return (0);
 }
 
-long long	get_the_time()
+long long	get_the_time(void)
 {
 	struct timeval	tv;
 
 	gettimeofday(&tv, NULL);
-	return((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
-void	philo_wait(t_data *data, t_mcrosec to_sleep)
+void	philo_wait(t_data *data, long long to_sleep)
 {
-	t_mcrosec	time;
+	long long	time;
 
 	time = get_the_time();
 	while (time + to_sleep > get_the_time() && (check_flag(data, 0) == 0))
 	{
-		usleep(500);
+		usleep(300);
 	}
 }
 
 int	start_routine(t_data *data)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	pthread_mutex_lock(&data->routine);
 	while (i < data->philo_count)
 	{
-		if (pthread_create(&data->philo[i].thread, NULL, &routine, &data->philo[i]) != 0)
+		if (pthread_create(&data->philo[i].thread, NULL, \
+		&routine, &data->philo[i]) != 0)
 			return (1);
 		data->philo[i].last_meal = get_the_time();
 		i++;
@@ -70,15 +71,20 @@ int	start_routine(t_data *data)
 int	main(int argc, char **argv)
 {
 	t_data	*data;
+	int		c;
 
 	data = NULL;
 	if (argc != 5 && argc != 6)
-		exit (1);
+		return (1);
+	c = check_input(argc, argv);
+	c = check_validity(c, argc, argv);
+	if (c == 1)
+		return (1);
 	data = init_data(argc, argv);
 	if (!data)
 	{
 		printf("something went wrong with initializaltion\n");
-		exit (1);
+		return (1);
 	}
 	start_routine(data);
 	monitoring(data);

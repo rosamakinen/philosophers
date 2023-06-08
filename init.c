@@ -6,7 +6,7 @@
 /*   By: rmakinen <rmakinen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 07:53:23 by rmakinen          #+#    #+#             */
-/*   Updated: 2023/06/06 18:21:49 by rmakinen         ###   ########.fr       */
+/*   Updated: 2023/06/08 08:26:49 by rmakinen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ int	init_mutexes(t_data *data)
 	}
 	pthread_mutex_init(&data->printing, NULL);
 	pthread_mutex_init(&data->routine, NULL);
-	pthread_mutex_init(&data->finish, NULL);
 	pthread_mutex_init(&data->checking, NULL);
 	return (0);
 }
@@ -64,6 +63,7 @@ t_data	*init_data(int argc, char **argv)
 {
 	t_data	*data;
 	int		i;
+	int		arg_i;
 
 	i = 1;
 	data = ft_calloc(1, sizeof(t_data));
@@ -71,16 +71,15 @@ t_data	*init_data(int argc, char **argv)
 		return (NULL);
 	while (i < argc)
 	{
-		check_input(argv[i]);
-		check_validity(argv[i], i, data);
+		arg_i = ft_atoi(argv[i]);
+		init_args(arg_i, i, data);
 		i++;
 	}
 	init_mutexes(data);
-	data->stop_simulation = 0;
 	data->exit_flag = 0;
 	data->all_eaten = 0;
 	data->buffer = 0;
-	if (data->philo_count > 100)
+	if (data->philo_count > 50 && data->time_to_die < 200)
 		data->buffer = 2;
 	data->philo = init_philos(data);
 	if (!data->philo)
